@@ -1,54 +1,70 @@
-# 🌟 git.3asy.app
+<div align="center">
 
-> Transform your GitHub contributions into a cinematic visual experience with generative music.
+# 🌆 git.3asy.app
 
-![git.3asy.app](https://img.shields.io/badge/GitHub-Visualizer-brightgreen?style=for-the-badge&logo=github)
-![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Three.js](https://img.shields.io/badge/Three.js-R3F-black?style=for-the-badge&logo=three.js)
+### Your GitHub Story, Visualized
+
+Transform your GitHub contributions into stunning 3D visualizations with generative music.
+
+**This is not a heatmap.**
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-git.3asy.app-39FF14?style=for-the-badge)](https://git.3asy.app)
+[![GitHub Stars](https://img.shields.io/github/stars/3festo/3ASY-GITHUB-GRAPH?style=for-the-badge&logo=github&color=00FFFF)](https://github.com/3festo/3ASY-GITHUB-GRAPH/stargazers)
+[![License](https://img.shields.io/badge/License-MIT-BF00FF?style=for-the-badge)](LICENSE)
+
+<br />
+
+![Preview](public/og-image.png)
+
+<br />
+
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Three.js](https://img.shields.io/badge/Three.js-R3F-000000?style=flat-square&logo=three.js)](https://threejs.org)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)](https://vitejs.dev)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
+
+</div>
+
+---
 
 ## ✨ Features
 
-### 🎬 5 Cinematic Visualizations
-- **🌌 Galaxy** - Your commits as stars in an infinite universe
-- **🏔️ Mountain** - Contribution peaks form majestic terrain
-- **🌀 Tunnel** - Journey through your coding timeline
-- **🏙️ City** - A neon cyberpunk skyline of your work
-- **💓 Heartbeat** - The pulse of your open source life
+### 🏙️ Cinematic 3D Visualization
+Your GitHub contributions transformed into a **neon cyberpunk city** - each commit builds the skyline, each contribution lights up the night.
 
 ### 🎵 Generative Audio System
-Each visualization comes with its own procedural music genre:
-- **Galaxy** → Ambient / Space Synth
-- **Mountain** → Cinematic / Epic Orchestral
-- **Tunnel** → Techno / Trance
-- **City** → Synthwave / Cyberpunk
-- **Heartbeat** → Drum & Bass / Industrial
+Real-time procedural **synthwave music** that adapts to your contribution data. More commits = higher energy music.
 
-### 🎚️ Dynamic Music Based on Contributions
-The music adapts to your contribution level:
+### 🎚️ Dynamic Music Based on Activity
 
-| Contributions | Energy Level | BPM | Musical Character |
-|--------------|--------------|-----|-------------------|
-| 0-100 | 😌 Chill | 128 | Dreamy, minimal |
-| 100-300 | 🎵 Relaxed | 130 | Peaceful, flowing |
-| 300-600 | 🎸 Moderate | 135 | Groovy, engaging |
-| 600-800 | ⚡ Active | 138 | Driving, energetic |
-| 800-1000 | 🔥 Energetic | 140 | Powerful, intense |
-| 1000-2000 | 💥 Intense | 145 | Dark, aggressive |
-| 2000-3000 | 🚀 Extreme | 150 | Dramatic, complex |
-| 3000+ | 👑 Legendary | 155 | Epic, triumphant |
+Each contribution count generates a **unique melody** with procedural synthesis!
 
-## 🚀 Getting Started
+| Contributions | Genre | BPM | Vibe |
+|:-------------:|:-----:|:---:|:-----|
+| 0-200 | 🌊 Chillout | 85-109 | Ambient, relaxed |
+| 200-800 | 🔊 Techno | 110-127 | Groovy, steady |
+| 800-2000 | 🌀 Trance | 128-139 | Melodic, euphoric |
+| 2000-4000 | 💥 Hardstyle | 140-154 | Powerful, driving |
+| 4000+ | 🔥 Hardcore | 155-180 | Intense, relentless |
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
+> **Example:** @torvalds with ~3100 contributions → 💥 **Hardstyle @ 148 BPM**
 
-### Installation
+### 📤 One-Click Sharing
+Share your unique visualization on Twitter, LinkedIn, or copy the direct link to show off your coding journey.
+
+---
+
+## 🚀 Quick Start
+
+### Try it Online
+👉 **[git.3asy.app](https://git.3asy.app)** — Enter any GitHub username and watch the magic happen!
+
+### Run Locally
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/3ASY-GITHUB-GRAPH.git
+git clone https://github.com/3festo/3ASY-GITHUB-GRAPH.git
 cd 3ASY-GITHUB-GRAPH
 
 # Install dependencies
@@ -58,102 +74,101 @@ npm install
 npm run dev
 ```
 
-### Usage
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-1. Open the app in your browser
-2. Enter any GitHub username to visualize their contributions
-3. Use ← → arrow keys or click arrows to switch visualizations
-4. Press **M** or click the sound icon to enable generative music
-5. Share your unique visualization!
+---
 
-## 🎮 Keyboard Shortcuts
+## 🎮 Controls
 
-| Key | Action |
-|-----|--------|
-| ← | Previous visualization |
-| → | Next visualization |
-| M | Toggle music |
+| Action | Control |
+|:-------|:--------|
+| Toggle Music | Press `M` or click 🔊 |
+| Search User | Click 🔍 or type username |
+| Share | Click 📤 |
+
+---
 
 ## 🛠️ Tech Stack
 
-- **React 18** - UI Framework
-- **TypeScript 5** - Type Safety
-- **Vite 5** - Build Tool
-- **React Three Fiber** - 3D Graphics
-- **Three.js** - WebGL Engine
-- **Framer Motion** - Animations
-- **TailwindCSS** - Styling
-- **Shadcn/UI** - Component Library
-- **Web Audio API** - Procedural Music Generation
+| Technology | Purpose |
+|:-----------|:--------|
+| **React 18** | UI Framework |
+| **TypeScript 5** | Type Safety |
+| **Vite 5** | Build Tool |
+| **React Three Fiber** | 3D Rendering |
+| **Three.js** | WebGL Engine |
+| **Framer Motion** | Animations |
+| **TailwindCSS** | Styling |
+| **Web Audio API** | Procedural Music |
+
+---
 
 ## 📦 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/              # Shadcn UI components
-│   └── visualizations/  # 5 visualization modes
+│   ├── ui/              # Reusable UI components
+│   └── visualizations/  # 3D city visualization
 ├── lib/
 │   ├── audioEngine.ts   # Generative music system
 │   ├── githubService.ts # GitHub API integration
-│   └── mockData.ts      # Demo data
+│   └── utils.ts         # Utility functions
 ├── types/               # TypeScript definitions
 ├── App.tsx              # Main application
 └── main.tsx             # Entry point
+
+public/
+├── og-image.png         # Social sharing preview
+├── manifest.json        # PWA manifest
+├── favicon.svg          # App icon
+└── robots.txt           # SEO
 ```
-
-## 🎨 Customization
-
-### Adding New Visualizations
-
-1. Create a new component in `src/components/visualizations/`
-2. Export it from the index
-3. Add the mode to `VISUALIZATION_MODES` in `types/github.ts`
-4. Map a music genre in `audioEngine.ts`
-
-### Creating New Music Genres
-
-Add a new generator method in `audioEngine.ts`:
-
-```typescript
-private generateMyGenre(bpm: number, duration: number): void {
-  // Use the energy config for dynamic music
-  const energy = this.getEnergyConfig();
-  // Your procedural music logic here
-}
-```
-
-## 🌐 Deployment
-
-### GitHub Pages
-
-The project includes automatic deployment via GitHub Actions:
-
-1. Push to `main` branch
-2. GitHub Actions builds the project
-3. Deploys to GitHub Pages automatically
-
-### Manual Build
-
-```bash
-npm run build
-# Output in ./dist folder
-```
-
-## 📄 License
-
-MIT License - feel free to use this for your own projects!
-
-## 🙏 Credits
-
-- Visualization inspiration: GitHub's contribution graph
-- Music system: Web Audio API procedural synthesis
-- UI components: Shadcn/UI
 
 ---
 
-<p align="center">
-  Made with 💚 for the open source community
-  <br>
-  <a href="https://github.com/YOUR_USERNAME/3ASY-GITHUB-GRAPH">Star this repo</a> if you found it useful!
-</p>
+## 🌐 Deployment
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+Output will be in the `./dist` folder, ready to deploy to any static hosting.
+
+### Recommended Platforms
+- **Vercel** (recommended)
+- **Netlify**
+- **GitHub Pages**
+- **Cloudflare Pages**
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+### 🌟 Star this repo if you like it!
+
+Made with 💜 by [MM@3ASY](https://3asy.app)
+
+**[🚀 Try it now → git.3asy.app](https://git.3asy.app)**
+
+</div>

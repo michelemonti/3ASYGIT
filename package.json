@@ -1,13 +1,36 @@
 {
-  "name": "git-3asy-app",
-  "private": true,
+  "name": "3asygit",
   "version": "1.0.0",
+  "description": "Transform your GitHub contributions into stunning 3D visualizations with generative music. This is not a heatmap.",
+  "author": "3ASY <hello@3asy.app> (https://3asy.app)",
+  "license": "MIT",
+  "homepage": "https://git.3asy.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3festo/3ASY-GITHUB-GRAPH.git"
+  },
+  "bugs": {
+    "url": "https://github.com/3festo/3ASY-GITHUB-GRAPH/issues"
+  },
+  "keywords": [
+    "github",
+    "visualization",
+    "3d",
+    "three.js",
+    "react",
+    "generative-music",
+    "web-audio",
+    "contributions",
+    "heatmap",
+    "cyberpunk"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-assets": "npx tsx scripts/generate-assets.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -31,6 +54,7 @@
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "@types/sharp": "^0.31.1",
     "@types/three": "^0.160.0",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
@@ -40,6 +64,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.32",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.10"

@@ -294,44 +294,82 @@ function countToLevel(count: number): 0 | 1 | 2 | 3 | 4 {
   return 4;
 }
 
-// Calculate streaks
+// Calculate streaks - properly handles contribution data
 export function calculateStreaks(contributions: GitHubContributions): { current: number; longest: number } {
   const allDays = contributions.weeks.flatMap(w => w.days);
   
-  // Sort by date descending
-  allDays.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Sort by date ascending (oldest first)
+  allDays.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   
-  let currentStreak = 0;
+  // Get today's date for comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Calculate longest streak
   let longestStreak = 0;
   let tempStreak = 0;
-  let foundToday = false;
-  
-  const today = new Date().toISOString().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
   
   for (const day of allDays) {
     if (day.count > 0) {
       tempStreak++;
-      
-      // Current streak starts from today or yesterday
-      if (!foundToday && (day.date === today || day.date === yesterday)) {
-        foundToday = true;
-      }
-      
-      if (foundToday) {
-        currentStreak = tempStreak;
-      }
-    } else {
-      if (foundToday && currentStreak === 0) {
-        // Streak ended
-        foundToday = false;
-      }
       longestStreak = Math.max(longestStreak, tempStreak);
+    } else {
       tempStreak = 0;
     }
   }
   
-  longestStreak = Math.max(longestStreak, tempStreak);
+  // Calculate current streak (going backwards from today or most recent day)
+  let currentStreak = 0;
+  
+  // Find the index of today or the most recent day with data
+  let startIndex = allDays.length - 1;
+  
+  // If the most recent day in data is today, start from there
+  // If not, check if the most recent day is yesterday (streak might still be active)
+  const mostRecentDay = allDays[startIndex];
+  const mostRecentDate = new Date(mostRecentDay.date);
+  mostRecentDate.setHours(0, 0, 0, 0);
+  
+  const daysDiff = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // If no data for more than 1 day, current streak is 0
+  if (daysDiff > 1) {
+    return { current: 0, longest: longestStreak };
+  }
+  
+  // If today has no contributions but yesterday did, still count from yesterday
+  if (mostRecentDay.count === 0 && daysDiff === 0) {
+    // Today exists but has 0 - check if we had contributions yesterday
+    startIndex--;
+    if (startIndex < 0 || allDays[startIndex].count === 0) {
+      return { current: 0, longest: longestStreak };
+    }
+  }
+  
+  // Count backwards from start index
+  for (let i = startIndex; i >= 0; i--) {
+    const day = allDays[i];
+    
+    if (day.count > 0) {
+      currentStreak++;
+      
+      // Check if the previous day is consecutive
+      if (i > 0) {
+        const prevDay = allDays[i - 1];
+        const currentDate = new Date(day.date);
+        const prevDate = new Date(prevDay.date);
+        const diff = Math.floor((currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        // If there's a gap of more than 1 day, stop
+        if (diff > 1) {
+          break;
+        }
+      }
+    } else {
+      // No contribution this day - streak broken
+      break;
+    }
+  }
   
   return { current: currentStreak, longest: longestStreak };
 }

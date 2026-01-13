@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <!-- Background -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020206"/>
+      <stop offset="50%" stop-color="#06060c"/>
+      <stop offset="100%" stop-color="#0a0a14"/>
+    </linearGradient>
+    
+    <!-- 3D Building gradients - TOP faces -->
+    <linearGradient id="greenTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5FFF3F"/>
+      <stop offset="100%" stop-color="#39FF14"/>
+    </linearGradient>
+    <linearGradient id="cyanTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#40FFFF"/>
+      <stop offset="100%" stop-color="#00FFFF"/>
+    </linearGradient>
+    <linearGradient id="purpleTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DF40FF"/>
+      <stop offset="100%" stop-color="#BF00FF"/>
+    </linearGradient>
+    
+    <!-- 3D Building gradients - FRONT faces -->
+    <linearGradient id="greenFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#39FF14"/>
+      <stop offset="100%" stop-color="#1a8a0a"/>
+    </linearGradient>
+    <linearGradient id="cyanFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00FFFF"/>
+      <stop offset="100%" stop-color="#007777"/>
+    </linearGradient>
+    <linearGradient id="purpleFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BF00FF"/>
+      <stop offset="100%" stop-color="#600080"/>
+    </linearGradient>
+    
+    <!-- 3D Building gradients - RIGHT faces (darker) -->
+    <linearGradient id="greenRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#28cc10"/>
+      <stop offset="100%" stop-color="#0d4a06"/>
+    </linearGradient>
+    <linearGradient id="cyanRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00cccc"/>
+      <stop offset="100%" stop-color="#004444"/>
+    </linearGradient>
+    <linearGradient id="purpleRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9900cc"/>
+      <stop offset="100%" stop-color="#400055"/>
+    </linearGradient>
+    
+    <!-- Title gradient -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#39FF14"/>
+      <stop offset="50%" stop-color="#00FFFF"/>
+      <stop offset="100%" stop-color="#BF00FF"/>
+    </linearGradient>
+    
+    <!-- Glow filters -->
+    <filter id="glowStrong" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="20" result="blur1"/>
+      <feGaussianBlur stdDeviation="10" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowMedium" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="titleGlow" x="-30%" y="-50%" width="160%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur1"/>
+      <feGaussianBlur stdDeviation="6" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Grid pattern for ground -->
+    <pattern id="gridFloor" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="skewX(-30)">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00FFFF" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Ambient glow -->
+  <ellipse cx="600" cy="320" rx="400" ry="250" fill="#00FFFF" opacity="0.04" filter="url(#glowStrong)"/>
+  <ellipse cx="350" cy="350" rx="200" ry="150" fill="#39FF14" opacity="0.03" filter="url(#glowStrong)"/>
+  <ellipse cx="850" cy="350" rx="200" ry="150" fill="#BF00FF" opacity="0.03" filter="url(#glowStrong)"/>
+  
+  <!-- Stars -->
+  <g>
+    <circle cx="100" cy="80" r="1.5" fill="#39FF14" opacity="0.7"/>
+    <circle cx="200" cy="120" r="1" fill="#00FFFF" opacity="0.6"/>
+    <circle cx="320" cy="60" r="1.5" fill="#BF00FF" opacity="0.5"/>
+    <circle cx="880" cy="70" r="2" fill="#39FF14" opacity="0.6"/>
+    <circle cx="1000" cy="100" r="1" fill="#00FFFF" opacity="0.5"/>
+    <circle cx="1100" cy="140" r="1.5" fill="#BF00FF" opacity="0.7"/>
+    <circle cx="500" cy="50" r="1" fill="#00FFFF" opacity="0.4"/>
+    <circle cx="700" cy="80" r="1" fill="#BF00FF" opacity="0.5"/>
+  </g>
+  
+  <!-- ===================== 3D ISOMETRIC CITY ===================== -->
+  <!-- Glow layer -->
+  <g filter="url(#glowStrong)" opacity="0.6">
+    <rect x="140" y="280" width="45" height="150" fill="#39FF14"/>
+    <rect x="220" y="230" width="50" height="200" fill="#39FF14"/>
+    <rect x="310" y="170" width="55" height="260" fill="#39FF14"/>
+    <rect x="410" y="130" width="60" height="300" fill="#00FFFF"/>
+    <rect x="520" y="90" width="70" height="340" fill="#00FFFF"/>
+    <rect x="640" y="110" width="65" height="320" fill="#00FFFF"/>
+    <rect x="750" y="160" width="55" height="270" fill="#BF00FF"/>
+    <rect x="850" y="220" width="50" height="210" fill="#BF00FF"/>
+    <rect x="940" y="280" width="45" height="150" fill="#BF00FF"/>
+  </g>
+  
+  <!-- 3D Buildings - Back row first, then front -->
+  <g transform="translate(60, 50)">
+    
+    <!-- Building 1 - Green (small) -->
+    <g transform="translate(80, 230)">
+      <!-- Front face -->
+      <polygon points="0,0 50,0 50,150 0,150" fill="url(#greenFront)"/>
+      <!-- Top face (3D) -->
+      <polygon points="0,0 50,0 70,-20 20,-20" fill="url(#greenTop)"/>
+      <!-- Right face (3D) -->
+      <polygon points="50,0 70,-20 70,130 50,150" fill="url(#greenRight)"/>
+    </g>
+    
+    <!-- Building 2 - Green (medium) -->
+    <g transform="translate(160, 180)">
+      <polygon points="0,0 55,0 55,200 0,200" fill="url(#greenFront)"/>
+      <polygon points="0,0 55,0 80,-25 25,-25" fill="url(#greenTop)"/>
+      <polygon points="55,0 80,-25 80,175 55,200" fill="url(#greenRight)"/>
+    </g>
+    
+    <!-- Building 3 - Green (tall) -->
+    <g transform="translate(250, 120)">
+      <polygon points="0,0 60,0 60,260 0,260" fill="url(#greenFront)"/>
+      <polygon points="0,0 60,0 90,-30 30,-30" fill="url(#greenTop)"/>
+      <polygon points="60,0 90,-30 90,230 60,260" fill="url(#greenRight)"/>
+    </g>
+    
+    <!-- Building 4 - Cyan (very tall) -->
+    <g transform="translate(350, 80)">
+      <polygon points="0,0 65,0 65,300 0,300" fill="url(#cyanFront)"/>
+      <polygon points="0,0 65,0 100,-35 35,-35" fill="url(#cyanTop)"/>
+      <polygon points="65,0 100,-35 100,265 65,300" fill="url(#cyanRight)"/>
+    </g>
+    
+    <!-- Building 5 - Cyan (TALLEST - CENTER) -->
+    <g transform="translate(460, 40)">
+      <polygon points="0,0 75,0 75,340 0,340" fill="url(#cyanFront)"/>
+      <polygon points="0,0 75,0 115,-40 40,-40" fill="url(#cyanTop)"/>
+      <polygon points="75,0 115,-40 115,300 75,340" fill="url(#cyanRight)"/>
+      <!-- Windows -->
+      <g fill="white" opacity="0.25">
+        <rect x="10" y="20" width="8" height="8" rx="1"/>
+        <rect x="25" y="20" width="8" height="8" rx="1"/>
+        <rect x="40" y="20" width="8" height="8" rx="1"/>
+        <rect x="55" y="20" width="8" height="8" rx="1"/>
+        <rect x="10" y="40" width="8" height="8" rx="1"/>
+        <rect x="25" y="40" width="8" height="8" rx="1"/>
+        <rect x="40" y="40" width="8" height="8" rx="1"/>
+        <rect x="55" y="40" width="8" height="8" rx="1"/>
+        <rect x="10" y="60" width="8" height="8" rx="1"/>
+        <rect x="40" y="60" width="8" height="8" rx="1"/>
+      </g>
+    </g>
+    
+    <!-- Building 6 - Cyan (tall) -->
+    <g transform="translate(580, 60)">
+      <polygon points="0,0 70,0 70,320 0,320" fill="url(#cyanFront)"/>
+      <polygon points="0,0 70,0 105,-35 35,-35" fill="url(#cyanTop)"/>
+      <polygon points="70,0 105,-35 105,285 70,320" fill="url(#cyanRight)"/>
+    </g>
+    
+    <!-- Building 7 - Purple (tall) -->
+    <g transform="translate(695, 110)">
+      <polygon points="0,0 60,0 60,270 0,270" fill="url(#purpleFront)"/>
+      <polygon points="0,0 60,0 90,-30 30,-30" fill="url(#purpleTop)"/>
+      <polygon points="60,0 90,-30 90,240 60,270" fill="url(#purpleRight)"/>
+    </g>
+    
+    <!-- Building 8 - Purple (medium) -->
+    <g transform="translate(795, 170)">
+      <polygon points="0,0 55,0 55,210 0,210" fill="url(#purpleFront)"/>
+      <polygon points="0,0 55,0 80,-25 25,-25" fill="url(#purpleTop)"/>
+      <polygon points="55,0 80,-25 80,185 55,210" fill="url(#purpleRight)"/>
+    </g>
+    
+    <!-- Building 9 - Purple (small) -->
+    <g transform="translate(885, 230)">
+      <polygon points="0,0 50,0 50,150 0,150" fill="url(#purpleFront)"/>
+      <polygon points="0,0 50,0 70,-20 20,-20" fill="url(#purpleTop)"/>
+      <polygon points="50,0 70,-20 70,130 50,150" fill="url(#purpleRight)"/>
+    </g>
+    
+  </g>
+  
+  <!-- Ground reflection line -->
+  <line x1="100" y1="430" x2="1100" y2="430" stroke="url(#titleGrad)" stroke-width="3" filter="url(#glowMedium)" opacity="0.7"/>
+  
+  <!-- ===================== TITLE ===================== -->
+  <g filter="url(#titleGlow)">
+    <text x="600" y="520" text-anchor="middle" font-family="'SF Pro Display', 'Inter', -apple-system, system-ui, sans-serif" font-size="85" font-weight="800" fill="url(#titleGrad)" letter-spacing="-3">
+      git.3asy.app
+    </text>
+  </g>
+  
+  <!-- Subtitle -->
+  <text x="600" y="570" text-anchor="middle" font-family="'SF Pro Display', 'Inter', system-ui, sans-serif" font-size="26" font-weight="400" fill="white" opacity="0.9" letter-spacing="2">
+    Your GitHub Story, Visualized
+  </text>
+  
+  <!-- 3D Badge -->
+  <g transform="translate(600, 605)" filter="url(#glowSoft)">
+    <rect x="-55" y="-15" width="110" height="30" rx="15" fill="#00FFFF" fill-opacity="0.15"/>
+    <rect x="-55" y="-15" width="110" height="30" rx="15" fill="none" stroke="#00FFFF" stroke-width="1.5"/>
+    <text x="0" y="6" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#00FFFF">✨ 3D + Music</text>
+  </g>
+  
+  <!-- GitHub Logo -->
+  <g transform="translate(1080, 80)" filter="url(#glowMedium)">
+    <circle cx="0" cy="0" r="45" fill="#050508" stroke="url(#titleGrad)" stroke-width="2"/>
+    <g transform="translate(-18, -20) scale(1.5)" fill="white">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+    </g>
+  </g>
+  
+  <!-- Tagline top -->
+  <text x="120" y="80" font-family="system-ui, sans-serif" font-size="12" fill="white" opacity="0.3" letter-spacing="3" font-weight="500">
+    THIS IS NOT A HEATMAP
+  </text>
+</svg>

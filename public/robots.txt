@@ -1,0 +1,10 @@
+# https://git.3asy.app robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://git.3asy.app/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

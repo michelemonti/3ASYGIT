@@ -1,0 +1,39 @@
+{
+  "name": "git.3asy.app - Your GitHub Story, Visualized",
+  "short_name": "git.3asy",
+  "description": "Transform your GitHub contributions into stunning 3D visualizations with generative music. This is not a heatmap.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["developer tools", "entertainment", "music", "social"],
+  "lang": "en",
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "GitHub contribution visualization as a neon city"
+    }
+  ]
+}
