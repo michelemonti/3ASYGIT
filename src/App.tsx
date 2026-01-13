@@ -44,7 +44,7 @@ import { ContributionData } from '@/types/github';
 // Visualization types
 const VISUALIZATIONS = [
   { id: 'city', name: 'Calendar City', emoji: '🏙️', description: 'Days become skyscrapers' },
-  { id: 'galaxy', name: 'Spiral Galaxy', emoji: '🌌', description: 'Commits as stars' },
+  { id: 'galaxy', name: 'Solar System', emoji: '☀️', description: 'Stars orbiting Earth around the Sun' },
 ] as const;
 type VisualizationType = typeof VISUALIZATIONS[number]['id'];
 

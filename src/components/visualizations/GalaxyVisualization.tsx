@@ -1,334 +1,294 @@
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Trail } from '@react-three/drei';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { ContributionData } from '@/types/github';
 
 // ============================================================================
-// GALAXY CONFIGURATION
+// CONFIGURATION - Simplified for performance
 // ============================================================================
-const SPIRAL_ARMS = 4;
-const SPIRAL_TIGHTNESS = 0.3;
-const GALAXY_RADIUS = 20;
-const CORE_DENSITY = 3;
-
-// Color palette for stars based on contribution level
-const STAR_COLORS = {
-  0: new THREE.Color('#1a1a2e'),  // Dim - almost invisible
-  1: new THREE.Color('#00ff87'),  // Green
-  2: new THREE.Color('#00ffff'),  // Cyan
-  3: new THREE.Color('#bf00ff'),  // Purple
-  4: new THREE.Color('#ff00ff'),  // Magenta - brightest
-};
+const SUN_RADIUS = 2.5;
+const EARTH_ORBIT_RADIUS = 10;
+const MARS_ORBIT_RADIUS = 18;
+const EARTH_RADIUS = 0.6;
+const MARS_RADIUS = 0.4;
+const MAX_COMMITS_FOR_MARS = 5000;
 
 // ============================================================================
-// STAR PARTICLE - Single contribution as a star
+// SUN - Simple and light
 // ============================================================================
-interface StarProps {
-  position: [number, number, number];
-  color: THREE.Color;
-  size: number;
-  intensity: number;
-  delay: number;
-  orbitSpeed: number;
-  orbitOffset: number;
-}
-
-function Star({ position, color, size, intensity, delay, orbitSpeed, orbitOffset }: StarProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const [visible, setVisible] = useState(false);
-  const initialPos = useRef(position);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
+function Sun() {
+  const sunRef = useRef<THREE.Mesh>(null);
   
   useFrame(({ clock }) => {
-    if (meshRef.current) {
-      const t = clock.getElapsedTime() * orbitSpeed + orbitOffset;
-      
-      // Spiral orbit motion
-      const x = initialPos.current[0] + Math.cos(t) * 0.1;
-      const y = initialPos.current[1] + Math.sin(t * 1.5) * 0.05;
-      const z = initialPos.current[2] + Math.sin(t) * 0.1;
-      
-      meshRef.current.position.set(x, y, z);
-      
-      // Twinkle effect
-      const twinkle = 0.7 + Math.sin(clock.getElapsedTime() * 3 + delay) * 0.3;
-      meshRef.current.scale.setScalar(size * twinkle);
-    }
-  });
-  
-  if (!visible) return null;
-  
-  return (
-    <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[size, 8, 8]} />
-      <meshBasicMaterial 
-        color={color} 
-        transparent 
-        opacity={0.9}
-      />
-      {/* Inner glow */}
-      <pointLight color={color} intensity={intensity * 0.5} distance={2} />
-    </mesh>
-  );
-}
-
-// ============================================================================
-// SHOOTING STAR - Streak day celebration
-// ============================================================================
-interface ShootingStarProps {
-  streakDays: number;
-}
-
-function ShootingStar({ streakDays }: ShootingStarProps) {
-  const ref = useRef<THREE.Mesh>(null);
-  const [active, setActive] = useState(false);
-  
-  useEffect(() => {
-    // Spawn shooting stars based on streak
-    const interval = setInterval(() => {
-      if (streakDays > 0) {
-        setActive(true);
-        setTimeout(() => setActive(false), 2000);
-      }
-    }, Math.max(8000 - streakDays * 100, 2000));
-    
-    return () => clearInterval(interval);
-  }, [streakDays]);
-  
-  useFrame(({ clock }) => {
-    if (ref.current && active) {
-      const t = (clock.getElapsedTime() % 2) / 2;
-      ref.current.position.x = THREE.MathUtils.lerp(15, -15, t);
-      ref.current.position.y = THREE.MathUtils.lerp(8, -2, t);
-      ref.current.position.z = THREE.MathUtils.lerp(-5, 5, t);
-    }
-  });
-  
-  if (!active) return null;
-  
-  return (
-    <Trail
-      width={2}
-      length={8}
-      color="#00ffff"
-      attenuation={(t) => t * t}
-    >
-      <mesh ref={ref}>
-        <sphereGeometry args={[0.15, 8, 8]} />
-        <meshBasicMaterial color="#ffffff" />
-      </mesh>
-    </Trail>
-  );
-}
-
-// ============================================================================
-// GALAXY CORE - Glowing center
-// ============================================================================
-function GalaxyCore({ totalContributions }: { totalContributions: number }) {
-  const coreRef = useRef<THREE.Mesh>(null);
-  const glowRef = useRef<THREE.Mesh>(null);
-  
-  // Core size based on total contributions
-  const coreSize = Math.min(1 + totalContributions / 2000, 3);
-  const glowIntensity = Math.min(0.5 + totalContributions / 3000, 2);
-  
-  useFrame(({ clock }) => {
-    if (coreRef.current) {
-      const pulse = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.1;
-      coreRef.current.scale.setScalar(coreSize * pulse);
-    }
-    if (glowRef.current) {
-      glowRef.current.rotation.z += 0.002;
-      const pulse = 1 + Math.sin(clock.getElapsedTime() * 1.5) * 0.15;
-      glowRef.current.scale.setScalar(coreSize * 3 * pulse);
+    if (sunRef.current) {
+      const pulse = 1 + Math.sin(clock.getElapsedTime() * 0.5) * 0.03;
+      sunRef.current.scale.setScalar(pulse);
     }
   });
   
   return (
     <group>
-      {/* Bright core */}
-      <mesh ref={coreRef}>
-        <sphereGeometry args={[coreSize, 32, 32]} />
-        <meshBasicMaterial color="#ffffff" />
-        <pointLight color="#ffffff" intensity={3} distance={15} />
+      <mesh ref={sunRef}>
+        <sphereGeometry args={[SUN_RADIUS, 32, 32]} />
+        <meshBasicMaterial color="#FDB813" />
       </mesh>
-      
-      {/* Inner glow ring */}
-      <mesh ref={glowRef}>
-        <torusGeometry args={[coreSize * 2, 0.3, 16, 64]} />
-        <meshBasicMaterial 
-          color="#bf00ff" 
-          transparent 
-          opacity={0.6}
-        />
-      </mesh>
-      
-      {/* Outer glow */}
       <mesh>
-        <sphereGeometry args={[coreSize * 4, 32, 32]} />
-        <meshBasicMaterial 
-          color="#4a0080" 
-          transparent 
-          opacity={0.15}
-        />
+        <sphereGeometry args={[SUN_RADIUS * 1.3, 16, 16]} />
+        <meshBasicMaterial color="#FFA500" transparent opacity={0.2} />
       </mesh>
-      
-      {/* Core light */}
-      <pointLight color="#bf00ff" intensity={glowIntensity} distance={30} />
-      <pointLight color="#00ffff" intensity={glowIntensity * 0.5} distance={20} />
+      <pointLight color="#FDB813" intensity={2} distance={50} />
     </group>
   );
 }
 
 // ============================================================================
-// DUST RING - Nebula effect around galaxy
+// EARTH - Home base
 // ============================================================================
-function DustRing() {
-  const ringRef = useRef<THREE.Mesh>(null);
-  
-  useFrame(({ clock }) => {
-    if (ringRef.current) {
-      ringRef.current.rotation.z = clock.getElapsedTime() * 0.02;
-    }
-  });
-  
-  return (
-    <mesh ref={ringRef} rotation={[Math.PI / 2.5, 0, 0]}>
-      <torusGeometry args={[GALAXY_RADIUS * 0.8, 3, 16, 100]} />
-      <meshBasicMaterial 
-        color="#1a0033" 
-        transparent 
-        opacity={0.3}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
-  );
+interface EarthProps {
+  progress: number; // 0-1 progress towards Mars
 }
 
-// ============================================================================
-// GALAXY GRID - Main spiral generation
-// ============================================================================
-interface GalaxyGridProps {
-  data: ContributionData;
-}
-
-function GalaxyGrid({ data }: GalaxyGridProps) {
-  const stars = useMemo(() => {
-    const result: StarProps[] = [];
-    
-    const allDays = data.weeks.flatMap(w => w.days);
-    const maxCount = Math.max(...allDays.map(d => d.count), 1);
-    
-    let starIndex = 0;
-    const totalDays = allDays.length;
-    
-    allDays.forEach((day, dayIndex) => {
-      if (day.level === 0) return; // Skip empty days
-      
-      // Calculate spiral position
-      const progress = dayIndex / totalDays;
-      const armIndex = dayIndex % SPIRAL_ARMS;
-      const armAngle = (armIndex / SPIRAL_ARMS) * Math.PI * 2;
-      
-      // Logarithmic spiral: r = a * e^(b*θ)
-      const theta = progress * Math.PI * 6; // More rotations
-      const radius = GALAXY_RADIUS * progress * 0.9 + 2;
-      
-      // Add some randomness to make it look natural
-      const scatter = (Math.random() - 0.5) * 2;
-      const heightScatter = (Math.random() - 0.5) * 1.5;
-      
-      const angle = theta + armAngle + SPIRAL_TIGHTNESS * progress;
-      const x = Math.cos(angle) * radius + scatter;
-      const z = Math.sin(angle) * radius + scatter;
-      const y = heightScatter * (1 - progress * 0.5); // Flatter towards edge
-      
-      // Star properties based on contribution level
-      const normalizedCount = day.count / maxCount;
-      const size = 0.08 + day.level * 0.06 + normalizedCount * 0.1;
-      const intensity = day.level * 0.3;
-      
-      result.push({
-        position: [x, y, z],
-        color: STAR_COLORS[day.level as keyof typeof STAR_COLORS],
-        size,
-        intensity,
-        delay: starIndex * 3,
-        orbitSpeed: 0.2 + Math.random() * 0.3,
-        orbitOffset: Math.random() * Math.PI * 2,
-      });
-      
-      starIndex++;
-    });
-    
-    return result;
-  }, [data]);
-  
-  // Rotate the entire galaxy slowly
+function Earth({ progress }: EarthProps) {
   const groupRef = useRef<THREE.Group>(null);
+  const earthRef = useRef<THREE.Mesh>(null);
   
   useFrame(({ clock }) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y = clock.getElapsedTime() * 0.03;
+      const t = clock.getElapsedTime() * 0.08;
+      groupRef.current.position.x = Math.cos(t) * EARTH_ORBIT_RADIUS;
+      groupRef.current.position.z = Math.sin(t) * EARTH_ORBIT_RADIUS;
+    }
+    if (earthRef.current) {
+      earthRef.current.rotation.y += 0.003;
     }
   });
   
   return (
     <group ref={groupRef}>
-      <GalaxyCore totalContributions={data.totalContributions} />
-      <DustRing />
+      <mesh ref={earthRef}>
+        <sphereGeometry args={[EARTH_RADIUS, 32, 32]} />
+        <meshBasicMaterial color="#4169E1" />
+      </mesh>
+      {/* Atmosphere glow - brighter when more commits */}
+      <mesh>
+        <sphereGeometry args={[EARTH_RADIUS * 1.2, 16, 16]} />
+        <meshBasicMaterial 
+          color="#00FF00" 
+          transparent 
+          opacity={0.1 + progress * 0.2} 
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ============================================================================
+// MARS - The goal!
+// ============================================================================
+interface MarsProps {
+  reached: boolean;
+}
+
+function Mars({ reached }: MarsProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  const marsRef = useRef<THREE.Mesh>(null);
+  
+  useFrame(({ clock }) => {
+    if (groupRef.current) {
+      const t = clock.getElapsedTime() * 0.04;
+      groupRef.current.position.x = Math.cos(t + Math.PI) * MARS_ORBIT_RADIUS;
+      groupRef.current.position.z = Math.sin(t + Math.PI) * MARS_ORBIT_RADIUS;
+    }
+    if (marsRef.current) {
+      marsRef.current.rotation.y += 0.002;
+    }
+  });
+  
+  return (
+    <group ref={groupRef}>
+      <mesh ref={marsRef}>
+        <sphereGeometry args={[MARS_RADIUS, 32, 32]} />
+        <meshBasicMaterial color={reached ? "#FF4500" : "#8B4513"} />
+      </mesh>
+      {/* Mars glow when reached */}
+      {reached && (
+        <mesh>
+          <sphereGeometry args={[MARS_RADIUS * 1.5, 16, 16]} />
+          <meshBasicMaterial color="#FF6347" transparent opacity={0.3} />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+// ============================================================================
+// STAR BRIDGE - Stars forming a path from Earth to Mars
+// ============================================================================
+interface StarBridgeProps {
+  totalContributions: number;
+}
+
+function StarBridge({ totalContributions }: StarBridgeProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  // Progress: 0 = at Earth, 1 = reached Mars
+  const progress = Math.min(totalContributions / MAX_COMMITS_FOR_MARS, 1);
+  const numStars = Math.min(Math.floor(totalContributions / 100), 50); // Max 50 stars
+  
+  const stars = useMemo(() => {
+    const result: { position: THREE.Vector3; size: number; color: string }[] = [];
+    
+    for (let i = 0; i < numStars; i++) {
+      const starProgress = (i / Math.max(numStars - 1, 1)) * progress;
       
+      // Interpolate between Earth orbit and Mars orbit
+      const radius = EARTH_ORBIT_RADIUS + (MARS_ORBIT_RADIUS - EARTH_ORBIT_RADIUS) * starProgress;
+      
+      // Spread stars in a spiral bridge
+      const angle = starProgress * Math.PI * 2;
+      const scatter = (Math.sin(i * 7.3) * 0.5);
+      const heightScatter = Math.cos(i * 5.7) * 1.5;
+      
+      result.push({
+        position: new THREE.Vector3(
+          Math.cos(angle) * radius + scatter,
+          heightScatter,
+          Math.sin(angle) * radius + scatter
+        ),
+        size: 0.1 + (Math.sin(i * 3.14) * 0.05),
+        color: i % 3 === 0 ? '#39FF14' : i % 3 === 1 ? '#00FFFF' : '#FF00FF',
+      });
+    }
+    
+    return result;
+  }, [numStars, progress]);
+  
+  // Rotate the whole bridge slowly
+  useFrame(({ clock }) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+    }
+  });
+  
+  return (
+    <group ref={groupRef}>
       {stars.map((star, i) => (
-        <Star key={i} {...star} />
+        <mesh key={i} position={star.position}>
+          <sphereGeometry args={[star.size, 8, 8]} />
+          <meshBasicMaterial color={star.color} />
+        </mesh>
       ))}
     </group>
   );
 }
 
 // ============================================================================
-// MAIN VISUALIZATION COMPONENT
+// ORBIT RINGS
+// ============================================================================
+function OrbitRings() {
+  return (
+    <group rotation={[Math.PI / 2, 0, 0]}>
+      <mesh>
+        <ringGeometry args={[EARTH_ORBIT_RADIUS - 0.03, EARTH_ORBIT_RADIUS + 0.03, 64]} />
+        <meshBasicMaterial color="#4169E1" transparent opacity={0.15} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh>
+        <ringGeometry args={[MARS_ORBIT_RADIUS - 0.03, MARS_ORBIT_RADIUS + 0.03, 64]} />
+        <meshBasicMaterial color="#CD5C5C" transparent opacity={0.15} side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  );
+}
+
+// ============================================================================
+// PROGRESS BAR - Visual journey to Mars
+// ============================================================================
+interface ProgressDisplayProps {
+  contributions: number;
+}
+
+function ProgressDisplay({ contributions }: ProgressDisplayProps) {
+  const progress = Math.min(contributions / MAX_COMMITS_FOR_MARS, 1);
+  const percentage = Math.round(progress * 100);
+  const remaining = Math.max(MAX_COMMITS_FOR_MARS - contributions, 0);
+  const reached = contributions >= MAX_COMMITS_FOR_MARS;
+  
+  return (
+    <motion.div
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+    >
+      <div className="bg-black/80 rounded-xl px-6 py-4 border border-white/10">
+        {/* Progress bar */}
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-2xl">🌍</span>
+          <div className="w-48 h-3 bg-white/10 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full rounded-full"
+              style={{ 
+                background: reached 
+                  ? 'linear-gradient(90deg, #39FF14, #FF4500)' 
+                  : 'linear-gradient(90deg, #39FF14, #00FFFF)',
+              }}
+              initial={{ width: 0 }}
+              animate={{ width: `${percentage}%` }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            />
+          </div>
+          <span className="text-2xl">{reached ? '🔴✨' : '🔴'}</span>
+        </div>
+        
+        {/* Text */}
+        <div className="text-center">
+          {reached ? (
+            <p className="text-orange-400 font-bold text-lg">
+              🚀 MARS REACHED! You're a legend!
+            </p>
+          ) : (
+            <p className="text-white/70 text-sm">
+              <span className="text-neon-green font-bold">{remaining.toLocaleString()}</span> more commits to reach Mars
+            </p>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT
 // ============================================================================
 interface GalaxyVisualizationProps {
   data: ContributionData;
 }
 
 export function GalaxyVisualization({ data }: GalaxyVisualizationProps) {
-  const intensity = Math.min(data.totalContributions / 2000, 1);
+  const progress = Math.min(data.totalContributions / MAX_COMMITS_FOR_MARS, 1);
+  const reached = data.totalContributions >= MAX_COMMITS_FOR_MARS;
+  const numStars = Math.min(Math.floor(data.totalContributions / 100), 50);
   
   return (
     <motion.div 
       className="w-full h-full relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* Stats overlay */}
+      {/* Top stats */}
       <motion.div
         className="absolute top-4 left-4 z-10"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.3 }}
       >
-        <div className="text-neon-pink text-sm font-mono px-3 py-1 rounded bg-black/70 border border-neon-pink/50">
-          {data.totalContributions.toLocaleString()} stars in your galaxy
-        </div>
-      </motion.div>
-      
-      <motion.div
-        className="absolute bottom-4 left-4 z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-      >
-        <div className="text-cyan-400 text-xs font-mono px-2 py-1 rounded bg-black/70">
-          ☄️ {data.currentStreak} day streak
+        <div className="bg-black/70 rounded-lg px-3 py-2 border border-yellow-400/30">
+          <p className="text-yellow-400 text-sm font-mono">
+            ☀️ {data.totalContributions.toLocaleString()} contributions
+          </p>
         </div>
       </motion.div>
       
@@ -336,57 +296,42 @@ export function GalaxyVisualization({ data }: GalaxyVisualizationProps) {
         className="absolute top-4 right-4 z-10"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.6 }}
+        transition={{ delay: 0.4 }}
       >
-        <div className="text-white/70 text-xs font-mono px-2 py-1 rounded bg-black/50">
-          Spiral Galaxy • {SPIRAL_ARMS} arms
+        <div className="bg-black/70 rounded-lg px-3 py-2 border border-neon-green/30">
+          <p className="text-neon-green text-sm font-mono">
+            ⭐ {numStars} stars on your journey
+          </p>
         </div>
       </motion.div>
       
+      {/* Progress to Mars */}
+      <ProgressDisplay contributions={data.totalContributions} />
+      
+      {/* 3D Scene */}
       <Canvas
-        camera={{ position: [0, 15, 30], fov: 50 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+        camera={{ position: [0, 20, 30], fov: 45 }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        style={{ background: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%)' }}
       >
-        {/* Deep space background stars */}
-        <Stars 
-          radius={100} 
-          depth={50} 
-          count={5000} 
-          factor={4} 
-          saturation={0} 
-          fade 
-          speed={0.5}
-        />
+        <ambientLight intensity={0.3} />
         
-        {/* Ambient lighting */}
-        <ambientLight intensity={0.1} />
-        
-        {/* Galaxy */}
-        <GalaxyGrid data={data} />
-        
-        {/* Shooting stars for streaks */}
-        <ShootingStar streakDays={data.currentStreak} />
+        <Sun />
+        <OrbitRings />
+        <Earth progress={progress} />
+        <Mars reached={reached} />
+        <StarBridge totalContributions={data.totalContributions} />
         
         <OrbitControls
           enableZoom={true}
           enablePan={false}
           autoRotate
-          autoRotateSpeed={0.1}
-          minDistance={10}
+          autoRotateSpeed={0.3}
+          minDistance={15}
           maxDistance={60}
-          maxPolarAngle={Math.PI / 1.5}
+          maxPolarAngle={Math.PI / 1.8}
           minPolarAngle={Math.PI / 6}
-          target={[0, 0, 0]}
         />
-        
-        <EffectComposer>
-          <Bloom
-            intensity={1 + intensity * 0.5}
-            luminanceThreshold={0.1}
-            luminanceSmoothing={0.9}
-          />
-        </EffectComposer>
       </Canvas>
     </motion.div>
   );
