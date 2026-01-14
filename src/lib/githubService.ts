@@ -170,8 +170,8 @@ async function fetchContributionsGraphQL(username: string, token: string): Promi
     
     return {
       totalContributions: calendar.totalContributions,
-      weeks: calendar.weeks.map((week: any) => ({
-        days: week.contributionDays.map((day: any) => ({
+      weeks: calendar.weeks.map((week: { contributionDays: Array<{ date: string; contributionCount: number; contributionLevel: string }> }) => ({
+        days: week.contributionDays.map((day) => ({
           date: day.date,
           count: day.contributionCount,
           level: levelStringToNumber(day.contributionLevel),
@@ -209,10 +209,10 @@ async function fetchContributionsPublic(username: string): Promise<GitHubContrib
     const data = await response.json();
     
     // Transform the data to our format
-    const contributions: ContributionDay[] = data.contributions.map((c: any) => ({
+    const contributions: ContributionDay[] = data.contributions.map((c: { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }) => ({
       date: c.date,
       count: c.count,
-      level: c.level as 0 | 1 | 2 | 3 | 4,
+      level: c.level,
     }));
     
     // Group into weeks
@@ -246,7 +246,7 @@ async function estimateContributionsFromEvents(username: string): Promise<GitHub
     
     // Count events by date
     const countsByDate: Record<string, number> = {};
-    events.forEach((event: any) => {
+    events.forEach((event: { created_at: string }) => {
       const date = event.created_at.split('T')[0];
       countsByDate[date] = (countsByDate[date] || 0) + 1;
     });
@@ -423,7 +423,7 @@ async function fetchTopLanguages(username: string, token?: string): Promise<{ na
     
     // Count languages
     const languageCounts: Record<string, number> = {};
-    repos.forEach((repo: any) => {
+    repos.forEach((repo: { language: string | null }) => {
       if (repo.language) {
         languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
       }

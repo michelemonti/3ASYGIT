@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -331,10 +331,27 @@ interface CityVisualizationProps {
   data: ContributionData;
 }
 
-export function CityVisualization({ data }: CityVisualizationProps) {
-  const intensity = Math.min(data.totalContributions / 1000, 2);
+export interface VisualizationHandle {
+  captureScreenshot: () => Promise<Blob | null>;
+}
+
+export const CityVisualization = forwardRef<VisualizationHandle, CityVisualizationProps>(
+  function CityVisualization({ data }, ref) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const intensity = Math.min(data.totalContributions / 1000, 2);
+
+    useImperativeHandle(ref, () => ({
+      captureScreenshot: async () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return null;
+        
+        return new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+        });
+      }
+    }));
   
-  return (
+    return (
     <motion.div
       className="w-full h-full relative"
       initial={{ opacity: 0, y: 50 }}
@@ -377,9 +394,10 @@ export function CityVisualization({ data }: CityVisualizationProps) {
       </motion.div>
       
       <Canvas
+        ref={canvasRef}
         camera={{ position: [8, 18, 25], fov: 45 }}
         shadows
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true }}
         style={{ background: 'transparent' }}
       >
         <fog attach="fog" args={['#0d1117', 35, 70]} />
@@ -444,4 +462,4 @@ export function CityVisualization({ data }: CityVisualizationProps) {
       </Canvas>
     </motion.div>
   );
-}
+});

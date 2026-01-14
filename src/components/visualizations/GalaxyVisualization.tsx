@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -266,12 +266,29 @@ interface GalaxyVisualizationProps {
   data: ContributionData;
 }
 
-export function GalaxyVisualization({ data }: GalaxyVisualizationProps) {
-  const progress = Math.min(data.totalContributions / MAX_COMMITS_FOR_MARS, 1);
-  const reached = data.totalContributions >= MAX_COMMITS_FOR_MARS;
-  const numStars = Math.min(Math.floor(data.totalContributions / 100), 50);
+export interface VisualizationHandle {
+  captureScreenshot: () => Promise<Blob | null>;
+}
+
+export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisualizationProps>(
+  function GalaxyVisualization({ data }, ref) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const progress = Math.min(data.totalContributions / MAX_COMMITS_FOR_MARS, 1);
+    const reached = data.totalContributions >= MAX_COMMITS_FOR_MARS;
+    const numStars = Math.min(Math.floor(data.totalContributions / 100), 50);
+
+    useImperativeHandle(ref, () => ({
+      captureScreenshot: async () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return null;
+        
+        return new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+        });
+      }
+    }));
   
-  return (
+    return (
     <motion.div 
       className="w-full h-full relative"
       initial={{ opacity: 0 }}
@@ -310,8 +327,9 @@ export function GalaxyVisualization({ data }: GalaxyVisualizationProps) {
       
       {/* 3D Scene */}
       <Canvas
+        ref={canvasRef}
         camera={{ position: [0, 20, 30], fov: 45 }}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true }}
         style={{ background: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%)' }}
       >
         <ambientLight intensity={0.3} />
@@ -335,4 +353,4 @@ export function GalaxyVisualization({ data }: GalaxyVisualizationProps) {
       </Canvas>
     </motion.div>
   );
-}
+});
