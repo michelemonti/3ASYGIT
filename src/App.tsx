@@ -428,9 +428,9 @@ function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggl
                 <DialogDescription className="space-y-3 pt-2">
                   <p>Transform your GitHub contributions into 3D  visualizations.</p>
                   <ul className="space-y-1 text-sm">
-                    <li>🏙️ <strong>Calendar City</strong> - Commits become 3D things</li>
-                    <li>🎵 <strong>Generative Music</strong> - Synthwave based on your activity (Variabele BPM and style)</li>
-                    <li>⚡ <strong>Energy Levels</strong> - From lurker to legend</li>
+                    <li className="whitespace-nowrap">🎮 <strong>Three dimensions Canvas</strong> - Commits become 3D things</li>
+                    <li className="whitespace-nowrap">🎵 <strong>Generative Music</strong> - Synthwave based on your activity</li>
+                    <li className="whitespace-nowrap">⚡ <strong>Energy Levels</strong> - From lurker to legend</li>
                   </ul>
                   <p className="text-xs text-white/50 pt-2">
                     Built with React, Three.js & Web Audio API
