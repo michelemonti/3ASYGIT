@@ -850,7 +850,7 @@ export class GenerativeAudioEngine {
     }
 
     this.scheduledNodes.forEach(node => {
-      try { node.stop(); } catch {}
+      try { node.stop(); } catch { /* ignore stop errors on already stopped nodes */ }
     });
     this.scheduledNodes = [];
   }
