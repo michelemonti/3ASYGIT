@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Github,
   Volume2,
   VolumeX,
-  Share2,
   Loader2,
   Sparkles,
   Activity,
@@ -15,8 +14,9 @@ import {
   User,
   ChevronRight,
   ChevronLeft,
+  Download,
+  Share2,
 } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -33,13 +33,124 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-
 import { DEMO_PROFILES } from '@/lib/mockData';
 import { getAudioEngine, getBPMFromContributions, getEnergyLevel, ENERGY_LEVEL_INFO, getGenreFromBPM, GENRE_INFO } from '@/lib/audioEngine';
 import { fetchGitHubStats, saveUserData, loadUserData, GitHubStats } from '@/lib/githubService';
-import { CityVisualization } from '@/components/visualizations/CityVisualization';
+import { CityVisualization, VisualizationHandle } from '@/components/visualizations/CityVisualization';
 import { GalaxyVisualization } from '@/components/visualizations/GalaxyVisualization';
 import { ContributionData } from '@/types/github';
+
+// X (Twitter) icon component
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+// LinkedIn icon component
+const LinkedInIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+);
+
+// ============================================================================
+// Share Dropdown Component
+// ============================================================================
+interface ShareDropdownProps {
+  onShare: (platform: 'twitter' | 'linkedin' | 'download') => void;
+}
+
+function ShareDropdown({ onShare }: ShareDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleShare = (platform: 'twitter' | 'linkedin' | 'download') => {
+    onShare(platform);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white/60 hover:text-white"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Share</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full mt-2 w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl"
+            style={{ zIndex: 9999 }}
+          >
+            <div className="p-1">
+              <button
+                onClick={() => handleShare('download')}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left group"
+              >
+                <Download className="w-4 h-4 text-neon-green" />
+                <div>
+                  <div className="text-sm text-white font-medium">Download PNG</div>
+                  <div className="text-xs text-white/50">Save to your device</div>
+                </div>
+              </button>
+
+              <div className="h-px bg-white/10 my-1" />
+
+              <button
+                onClick={() => handleShare('twitter')}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left group"
+              >
+                <XIcon className="w-4 h-4 text-white" />
+                <div>
+                  <div className="text-sm text-white font-medium">Share on X</div>
+                  <div className="text-xs text-white/50">Quick & snappy post</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleShare('linkedin')}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left group"
+              >
+                <LinkedInIcon className="w-4 h-4 text-[#0A66C2]" />
+                <div>
+                  <div className="text-sm text-white font-medium">Share on LinkedIn</div>
+                  <div className="text-xs text-white/50">Text copied, just paste!</div>
+                </div>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 // Visualization types
 const VISUALIZATIONS = [
@@ -79,9 +190,10 @@ interface HeaderProps {
   currentBPM: number;
   username?: string;
   onSearch?: (username: string) => void;
+  onShare?: (platform: 'twitter' | 'linkedin' | 'download') => void;
 }
 
-function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggleSound, data, currentBPM, username, onSearch }: HeaderProps) {
+function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggleSound, data, currentBPM, username, onSearch, onShare }: HeaderProps) {
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -328,25 +440,8 @@ function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggl
             </DialogContent>
           </Dialog>
 
-          {isConnected && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-white/60 hover:text-white"
-                    onClick={() => {
-                      const url = `${window.location.origin}?u=${username}`;
-                      navigator.clipboard.writeText(url);
-                    }}
-                  >
-                    <Share2 className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Share</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {isConnected && onShare && (
+            <ShareDropdown onShare={onShare} />
           )}
         </div>
       </div>
@@ -580,6 +675,58 @@ export default function App() {
   const [currentUsername, setCurrentUsername] = useState<string>('');
   const [currentBPM, setCurrentBPM] = useState(90);
   const [currentViz, setCurrentViz] = useState<VisualizationType>('city');
+  
+  // Refs for visualization screenshot
+  const vizRef = useRef<VisualizationHandle>(null);
+
+  // Screenshot capture function
+  const captureAndShare = useCallback(async (platform: 'twitter' | 'linkedin' | 'download') => {
+    const url = `${window.location.origin}?u=${currentUsername}`;
+    
+    // Try to capture screenshot
+    let imageBlob: Blob | null = null;
+    if (vizRef.current) {
+      try {
+        imageBlob = await vizRef.current.captureScreenshot();
+      } catch (e) {
+        console.warn('Failed to capture screenshot:', e);
+      }
+    }
+
+    // Direct download - skip Web Share API entirely
+    if (platform === 'download') {
+      if (imageBlob) {
+        const downloadUrl = URL.createObjectURL(imageBlob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `github-${currentUsername}-viz.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(downloadUrl);
+      }
+      return;
+    }
+
+    // Direct social sharing - open platform with pre-filled text (no popup)
+    if (platform === 'twitter') {
+      // Twitter/X: Snappy, casual tone
+      const text = `Just turned my GitHub commits into a cyberpunk city 🌆✨ Pretty cool ngl`;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+      window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+    } else if (platform === 'linkedin') {
+      // LinkedIn doesn't support pre-filled text anymore, so copy to clipboard first
+      const text = `I discovered an interesting way to visualize GitHub contributions - this tool transforms your commit history into a 3D cyberpunk city with AI-generated music based on your coding patterns.\n\n${url}`;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        console.warn('Failed to copy to clipboard:', e);
+      }
+      // Open LinkedIn create post page
+      const linkedInUrl = `https://www.linkedin.com/feed/?shareActive=true`;
+      window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
+    }
+  }, [currentUsername]);
 
   // Check URL params on mount
   useEffect(() => {
@@ -595,6 +742,7 @@ export default function App() {
         setIsConnected(true);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update BPM when data changes
@@ -697,6 +845,7 @@ export default function App() {
           currentBPM={currentBPM}
           username={currentUsername}
           onSearch={handleConnect}
+          onShare={captureAndShare}
         />
 
         <main className="w-full h-screen pt-16 pb-20">
@@ -726,7 +875,7 @@ export default function App() {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.4 }}
                       >
-                        <CityVisualization data={contributionData} />
+                        <CityVisualization ref={vizRef} data={contributionData} />
                       </motion.div>
                     ) : (
                       <motion.div
@@ -737,7 +886,7 @@ export default function App() {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.4 }}
                       >
-                        <GalaxyVisualization data={contributionData} />
+                        <GalaxyVisualization ref={vizRef} data={contributionData} />
                       </motion.div>
                     )}
                   </AnimatePresence>
