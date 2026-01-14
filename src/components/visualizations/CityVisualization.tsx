@@ -372,7 +372,7 @@ export const CityVisualization = forwardRef<VisualizationHandle, CityVisualizati
       </motion.div>
       
       <motion.div
-        className="absolute bottom-4 left-4 z-10"
+        className="absolute bottom-32 sm:bottom-4 left-4 z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}

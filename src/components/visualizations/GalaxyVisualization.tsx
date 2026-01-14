@@ -217,16 +217,16 @@ function ProgressDisplay({ contributions }: ProgressDisplayProps) {
   
   return (
     <motion.div
-      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[90%] sm:w-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
     >
-      <div className="bg-black/80 rounded-xl px-6 py-4 border border-white/10">
+      <div className="bg-black/80 rounded-xl px-4 sm:px-6 py-3 sm:py-4 border border-white/10">
         {/* Progress bar */}
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-2xl">🌍</span>
-          <div className="w-48 h-3 bg-white/10 rounded-full overflow-hidden">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2">
+          <span className="text-xl sm:text-2xl">🌍</span>
+          <div className="flex-1 sm:w-48 h-2 sm:h-3 bg-white/10 rounded-full overflow-hidden">
             <motion.div 
               className="h-full rounded-full"
               style={{ 
@@ -239,18 +239,18 @@ function ProgressDisplay({ contributions }: ProgressDisplayProps) {
               transition={{ duration: 1.5, ease: "easeOut" }}
             />
           </div>
-          <span className="text-2xl">{reached ? '🔴✨' : '🔴'}</span>
+          <span className="text-xl sm:text-2xl">{reached ? '🔴✨' : '🔴'}</span>
         </div>
         
         {/* Text */}
         <div className="text-center">
           {reached ? (
-            <p className="text-orange-400 font-bold text-lg">
-              🚀 MARS REACHED! You're a legend!
+            <p className="text-orange-400 font-bold text-sm sm:text-lg">
+              🚀 MARS REACHED!
             </p>
           ) : (
-            <p className="text-white/70 text-sm">
-              <span className="text-neon-green font-bold">{remaining.toLocaleString()}</span> more commits to reach Mars
+            <p className="text-white/70 text-xs sm:text-sm">
+              <span className="text-neon-green font-bold">{remaining.toLocaleString()}</span> commits to Mars
             </p>
           )}
         </div>
@@ -295,29 +295,29 @@ export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisuali
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Top stats */}
+      {/* Top stats - responsive positioning */}
       <motion.div
-        className="absolute top-4 left-4 z-10"
+        className="absolute top-4 left-4 z-10 max-w-[45%] sm:max-w-none"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <div className="bg-black/70 rounded-lg px-3 py-2 border border-yellow-400/30">
-          <p className="text-yellow-400 text-sm font-mono">
-            ☀️ {data.totalContributions.toLocaleString()} contributions
+        <div className="bg-black/70 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-yellow-400/30">
+          <p className="text-yellow-400 text-xs sm:text-sm font-mono truncate">
+            ☀️ {data.totalContributions.toLocaleString()}
           </p>
         </div>
       </motion.div>
       
       <motion.div
-        className="absolute top-4 right-4 z-10"
+        className="absolute top-4 right-4 z-10 max-w-[45%] sm:max-w-none"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <div className="bg-black/70 rounded-lg px-3 py-2 border border-neon-green/30">
-          <p className="text-neon-green text-sm font-mono">
-            ⭐ {numStars} stars on your journey
+        <div className="bg-black/70 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-neon-green/30">
+          <p className="text-neon-green text-xs sm:text-sm font-mono truncate">
+            ⭐ {numStars} stars
           </p>
         </div>
       </motion.div>
@@ -328,7 +328,7 @@ export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisuali
       {/* 3D Scene */}
       <Canvas
         ref={canvasRef}
-        camera={{ position: [0, 20, 30], fov: 45 }}
+        camera={{ position: [0, 25, 45], fov: 50 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true }}
         style={{ background: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%)' }}
       >
@@ -345,8 +345,8 @@ export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisuali
           enablePan={false}
           autoRotate
           autoRotateSpeed={0.3}
-          minDistance={15}
-          maxDistance={60}
+          minDistance={20}
+          maxDistance={80}
           maxPolarAngle={Math.PI / 1.8}
           minPolarAngle={Math.PI / 6}
         />

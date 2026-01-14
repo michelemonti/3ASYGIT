@@ -304,11 +304,11 @@ function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggl
                 {showSearch ? (
                   <motion.form
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 200, opacity: 1 }}
+                    animate={{ width: 180, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                     onSubmit={handleSearchSubmit}
-                    className="flex items-center"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center z-50"
                   >
                     <input
                       type="text"
@@ -318,7 +318,7 @@ function Header({ isConnected, onDisconnect, soundEnabled, audioLoading, onToggl
                       onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                       placeholder="Search user..."
                       autoFocus
-                      className="w-full pl-3 pr-8 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-neon-green/50 transition-all"
+                      className="w-full pl-3 pr-8 py-1.5 rounded-lg bg-black/90 border border-white/20 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-neon-green/50 transition-all"
                     />
                     <button
                       type="button"
