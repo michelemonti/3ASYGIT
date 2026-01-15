@@ -394,20 +394,20 @@ function Supercar({ speed }: SupercarProps) {
         ))}
         
         {/* Exhaust pipes - quad exhaust */}
-        <mesh position={[-1.42, 0.12, 0.25]}>
-          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh position={[-1.42, 0.12, 0.25]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} />
           <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.2} />
         </mesh>
-        <mesh position={[-1.42, 0.12, 0.12]}>
-          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh position={[-1.42, 0.12, 0.12]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} />
           <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.2} />
         </mesh>
-        <mesh position={[-1.42, 0.12, -0.12]}>
-          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh position={[-1.42, 0.12, -0.12]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} />
           <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.2} />
         </mesh>
-        <mesh position={[-1.42, 0.12, -0.25]}>
-          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh position={[-1.42, 0.12, -0.25]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.05, 0.06, 0.15, 12]} />
           <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.2} />
         </mesh>
         {/* Exhaust glow */}
