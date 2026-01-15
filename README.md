@@ -9,7 +9,7 @@ Transform your GitHub contributions into stunning 3D visualizations with generat
 **This is not a heatmap.**
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-git.3asy.app-39FF14?style=for-the-badge)](https://git.3asy.app)
-[![GitHub Stars](https://img.shields.io/github/stars/3festo/3ASYGI?style=for-the-badge&logo=github&color=00FFFF)](https://github.com/3festo/3ASYGIT/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/michelemonti/3ASYGIT?style=for-the-badge&logo=github&color=00FFFF)](https://github.com/michelemonti/3ASYGIT/stargazers)
 [![License](https://img.shields.io/badge/License-MIT-BF00FF?style=for-the-badge)](LICENSE)
 
 <br />
@@ -64,8 +64,8 @@ Share your unique visualization on Twitter, LinkedIn, or copy the direct link to
 
 ```bash
 # Clone the repository
-git clone https://github.com/3festo/3ASY-GITHUB-GRAPH.git
-cd 3ASY-GITHUB-GRAPH
+git clone https://github.com/michelemonti/3ASYGIT.git
+cd 3ASYGIT
 
 # Install dependencies
 npm install

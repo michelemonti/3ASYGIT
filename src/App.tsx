@@ -38,6 +38,7 @@ import { getAudioEngine, getBPMFromContributions, getEnergyLevel, ENERGY_LEVEL_I
 import { fetchGitHubStats, saveUserData, loadUserData, GitHubStats } from '@/lib/githubService';
 import { CityVisualization, VisualizationHandle } from '@/components/visualizations/CityVisualization';
 import { GalaxyVisualization } from '@/components/visualizations/GalaxyVisualization';
+import { SupercarVisualization } from '@/components/visualizations/SupercarVisualization';
 import { ContributionData } from '@/types/github';
 
 // X (Twitter) icon component
@@ -156,6 +157,7 @@ function ShareDropdown({ onShare }: ShareDropdownProps) {
 const VISUALIZATIONS = [
   { id: 'city', name: 'Calendar City', emoji: '🏙️', description: 'Days become skyscrapers' },
   { id: 'galaxy', name: 'Solar System', emoji: '☀️', description: 'Stars orbiting Earth around the Sun' },
+  { id: 'supercar', name: 'Speed Circuit', emoji: '🏎️', description: 'Commits fuel your supercar speed' },
 ] as const;
 type VisualizationType = typeof VISUALIZATIONS[number]['id'];
 
@@ -500,7 +502,7 @@ function WelcomeScreen({ onConnect, isLoading }: WelcomeScreenProps) {
         </h1>
 
         <p className="text-white/60 text-base mb-6">
-          Transform your GitHub into a 3D city
+          Transform your GitHub into stunning 3D visualizations
         </p>
 
         <AnimatePresence mode="wait">
@@ -577,14 +579,20 @@ function WelcomeScreen({ onConnect, isLoading }: WelcomeScreenProps) {
                 className="px-8"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                Build My City
+                Explore Visualizations
               </Button>
             </motion.form>
           )}
         </AnimatePresence>
 
-        <p className="text-white/30 text-sm mt-6">
-JUST 4 FUN        </p>
+        <div className="text-center mt-6 space-y-2">
+          <p className="text-white/50 text-sm">
+            🏙️ City • ☀️ Solar System • 🏎️ Speed Circuit
+          </p>
+          <p className="text-white/30 text-xs">
+            JUST 4 FUN • <a href="https://github.com/michelemonti/3ASYGIT" target="_blank" rel="noopener noreferrer" className="text-neon-green/60 hover:text-neon-green transition-colors">Build the 4th? Fork on GitHub →</a>
+          </p>
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -866,7 +874,7 @@ export default function App() {
               >
                 <Suspense fallback={<LoadingScene />}>
                   <AnimatePresence mode="wait">
-                    {currentViz === 'city' ? (
+                    {currentViz === 'city' && (
                       <motion.div
                         key="city"
                         className="w-full h-full"
@@ -877,7 +885,8 @@ export default function App() {
                       >
                         <CityVisualization ref={vizRef} data={contributionData} />
                       </motion.div>
-                    ) : (
+                    )}
+                    {currentViz === 'galaxy' && (
                       <motion.div
                         key="galaxy"
                         className="w-full h-full"
@@ -889,24 +898,55 @@ export default function App() {
                         <GalaxyVisualization ref={vizRef} data={contributionData} />
                       </motion.div>
                     )}
+                    {currentViz === 'supercar' && (
+                      <motion.div
+                        key="supercar"
+                        className="w-full h-full"
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <SupercarVisualization ref={vizRef} data={contributionData} />
+                      </motion.div>
+                    )}
                   </AnimatePresence>
                 </Suspense>
                 
-                {/* Navigation Arrow */}
+                {/* Left Navigation Arrow */}
+                <motion.button
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full glass border border-white/10 hover:border-neon-green/50 hover:bg-neon-green/10 transition-all group"
+                  onClick={() => {
+                    const vizIds = VISUALIZATIONS.map(v => v.id);
+                    const currentIndex = vizIds.indexOf(currentViz);
+                    const prevIndex = (currentIndex - 1 + vizIds.length) % vizIds.length;
+                    setCurrentViz(vizIds[prevIndex]);
+                  }}
+                  whileHover={{ scale: 1.1, x: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1 }}
+                >
+                  <ChevronLeft className="w-6 h-6 text-white/60 group-hover:text-neon-green transition-colors" />
+                </motion.button>
+                
+                {/* Right Navigation Arrow */}
                 <motion.button
                   className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full glass border border-white/10 hover:border-neon-green/50 hover:bg-neon-green/10 transition-all group"
-                  onClick={() => setCurrentViz(prev => prev === 'city' ? 'galaxy' : 'city')}
+                  onClick={() => {
+                    const vizIds = VISUALIZATIONS.map(v => v.id);
+                    const currentIndex = vizIds.indexOf(currentViz);
+                    const nextIndex = (currentIndex + 1) % vizIds.length;
+                    setCurrentViz(vizIds[nextIndex]);
+                  }}
                   whileHover={{ scale: 1.1, x: 5 }}
                   whileTap={{ scale: 0.95 }}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1 }}
                 >
-                  {currentViz === 'city' ? (
-                    <ChevronRight className="w-6 h-6 text-white/60 group-hover:text-neon-green transition-colors" />
-                  ) : (
-                    <ChevronLeft className="w-6 h-6 text-white/60 group-hover:text-neon-green transition-colors" />
-                  )}
+                  <ChevronRight className="w-6 h-6 text-white/60 group-hover:text-neon-green transition-colors" />
                 </motion.button>
                 
                 {/* Visualization indicator dots */}
