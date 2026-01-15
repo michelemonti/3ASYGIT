@@ -26,31 +26,31 @@ function getSpeedFromCommits(commits: number): number {
 // ============================================================================
 function RaceTrack() {
   const trackRef = useRef<THREE.Group>(null);
-  
+
   return (
     <group ref={trackRef} rotation={[0, 0, 0]}>
       {/* Outer track boundary */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
         <ringGeometry args={[TRACK_RADIUS - TRACK_WIDTH / 2, TRACK_RADIUS + TRACK_WIDTH / 2, 64]} />
-        <meshStandardMaterial 
-          color="#1a1a1a" 
+        <meshStandardMaterial
+          color="#1a1a1a"
           metalness={0.3}
           roughness={0.8}
         />
       </mesh>
-      
+
       {/* Track lines - outer */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
         <ringGeometry args={[TRACK_RADIUS + TRACK_WIDTH / 2 - 0.1, TRACK_RADIUS + TRACK_WIDTH / 2, 64]} />
         <meshBasicMaterial color="#ffffff" />
       </mesh>
-      
+
       {/* Track lines - inner */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
         <ringGeometry args={[TRACK_RADIUS - TRACK_WIDTH / 2, TRACK_RADIUS - TRACK_WIDTH / 2 + 0.1, 64]} />
         <meshBasicMaterial color="#ffffff" />
       </mesh>
-      
+
       {/* Center dashed line - alternating segments */}
       {Array.from({ length: 48 }).map((_, i) => {
         // Only render every other segment for dashed effect
@@ -59,8 +59,8 @@ function RaceTrack() {
         const endAngle = ((i + 1) / 48) * Math.PI * 2;
         const midAngle = (startAngle + endAngle) / 2;
         return (
-          <mesh 
-            key={i} 
+          <mesh
+            key={i}
             rotation={[-Math.PI / 2, 0, 0]}
             position={[0, 0.025, 0]}
           >
@@ -69,31 +69,31 @@ function RaceTrack() {
           </mesh>
         );
       })}
-      
+
       {/* Start/Finish line */}
       <mesh position={[TRACK_RADIUS, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[TRACK_WIDTH, 0.5]} />
         <meshBasicMaterial color="#ffffff" />
       </mesh>
-      
+
       {/* Checkered pattern on start line */}
       {Array.from({ length: 8 }).map((_, i) => (
-        <mesh 
-          key={`check-${i}`} 
-          position={[TRACK_RADIUS + (i % 2 === 0 ? -0.8 : 0.8), 0.035, (i - 3.5) * 0.12]} 
+        <mesh
+          key={`check-${i}`}
+          position={[TRACK_RADIUS + (i % 2 === 0 ? -0.8 : 0.8), 0.035, (i - 3.5) * 0.12]}
           rotation={[-Math.PI / 2, 0, 0]}
         >
           <planeGeometry args={[0.3, 0.12]} />
           <meshBasicMaterial color={i % 2 === 0 ? "#000000" : "#ffffff"} />
         </mesh>
       ))}
-      
+
       {/* Ground inside track */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
         <circleGeometry args={[TRACK_RADIUS - TRACK_WIDTH / 2 - 0.2, 64]} />
         <meshStandardMaterial color="#0d4d0d" metalness={0.1} roughness={0.9} />
       </mesh>
-      
+
       {/* Ground outside track */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
         <ringGeometry args={[TRACK_RADIUS + TRACK_WIDTH / 2 + 0.2, 50, 64]} />
@@ -115,28 +115,28 @@ function Supercar({ speed, color }: SupercarProps) {
   const carRef = useRef<THREE.Group>(null);
   const wheelRefs = useRef<THREE.Mesh[]>([]);
   const angleRef = useRef(0);
-  
+
   // Convert km/h to angular velocity (radians per frame)
   // At 100 km/h, complete one lap in ~3 seconds
   const angularSpeed = (speed / 100) * 0.02;
-  
+
   useFrame(() => {
     if (carRef.current) {
       angleRef.current += angularSpeed;
       const x = Math.cos(angleRef.current) * TRACK_RADIUS;
       const z = Math.sin(angleRef.current) * TRACK_RADIUS;
-      
+
       carRef.current.position.x = x;
       carRef.current.position.z = z;
-      carRef.current.rotation.y = -angleRef.current + Math.PI / 2;
-      
+      carRef.current.rotation.y = -angleRef.current - Math.PI / 2;
+
       // Rotate wheels
       wheelRefs.current.forEach(wheel => {
         if (wheel) wheel.rotation.x += angularSpeed * 5;
       });
     }
   });
-  
+
   return (
     <group ref={carRef} position={[TRACK_RADIUS, 0.15, 0]}>
       {/* Main body - sleek low profile */}
@@ -144,25 +144,25 @@ function Supercar({ speed, color }: SupercarProps) {
         <boxGeometry args={[1.8, 0.18, 0.7]} />
         <meshStandardMaterial color={color} metalness={0.9} roughness={0.1} />
       </mesh>
-      
+
       {/* Nose cone - pointed front */}
       <mesh position={[0.95, 0.06, 0]} rotation={[0, 0, -Math.PI / 12]} castShadow>
         <boxGeometry args={[0.4, 0.12, 0.5]} />
         <meshStandardMaterial color={color} metalness={0.9} roughness={0.1} />
       </mesh>
-      
+
       {/* Cockpit - driver area */}
       <mesh position={[0.1, 0.25, 0]} castShadow>
         <boxGeometry args={[0.5, 0.18, 0.45]} />
         <meshStandardMaterial color="#111111" metalness={0.3} roughness={0.5} />
       </mesh>
-      
+
       {/* Cockpit windshield */}
       <mesh position={[0.4, 0.22, 0]} rotation={[0, 0, Math.PI / 6]}>
         <boxGeometry args={[0.25, 0.12, 0.42]} />
         <meshStandardMaterial color="#1a1a2a" metalness={0.8} roughness={0.2} transparent opacity={0.8} />
       </mesh>
-      
+
       {/* Side pods - air intakes */}
       <mesh position={[-0.1, 0.12, 0.42]} castShadow>
         <boxGeometry args={[0.8, 0.15, 0.12]} />
@@ -172,7 +172,7 @@ function Supercar({ speed, color }: SupercarProps) {
         <boxGeometry args={[0.8, 0.15, 0.12]} />
         <meshStandardMaterial color={color} metalness={0.9} roughness={0.1} />
       </mesh>
-      
+
       {/* Front wing */}
       <mesh position={[1.1, 0.02, 0]}>
         <boxGeometry args={[0.3, 0.03, 0.9]} />
@@ -187,7 +187,7 @@ function Supercar({ speed, color }: SupercarProps) {
         <boxGeometry args={[0.25, 0.1, 0.03]} />
         <meshStandardMaterial color={color} metalness={0.9} roughness={0.1} />
       </mesh>
-      
+
       {/* Rear wing - large */}
       <mesh position={[-0.85, 0.35, 0]}>
         <boxGeometry args={[0.25, 0.04, 0.85]} />
@@ -211,7 +211,7 @@ function Supercar({ speed, color }: SupercarProps) {
         <boxGeometry args={[0.2, 0.12, 0.03]} />
         <meshStandardMaterial color={color} metalness={0.9} roughness={0.1} />
       </mesh>
-      
+
       {/* Wheels - larger, more visible */}
       {[
         { pos: [0.6, 0, 0.45] as [number, number, number], isFront: true },
@@ -232,11 +232,11 @@ function Supercar({ speed, color }: SupercarProps) {
           </mesh>
         </group>
       ))}
-      
+
       {/* Headlights glow */}
       <pointLight position={[1.1, 0.1, 0.2]} color="#ffffff" intensity={1} distance={5} />
       <pointLight position={[1.1, 0.1, -0.2]} color="#ffffff" intensity={1} distance={5} />
-      
+
       {/* Tail lights */}
       <mesh position={[-0.9, 0.1, 0.25]}>
         <boxGeometry args={[0.02, 0.04, 0.08]} />
@@ -246,7 +246,7 @@ function Supercar({ speed, color }: SupercarProps) {
         <boxGeometry args={[0.02, 0.04, 0.08]} />
         <meshBasicMaterial color="#ff0000" />
       </mesh>
-      
+
       {/* Neon underglow */}
       <pointLight position={[0, -0.05, 0]} color={color} intensity={2} distance={1.5} />
     </group>
@@ -269,7 +269,7 @@ function TrackDecorations() {
     }
     return result;
   }, []);
-  
+
   return (
     <group>
       {trees.map((tree, i) => (
@@ -286,7 +286,7 @@ function TrackDecorations() {
           </mesh>
         </group>
       ))}
-      
+
       {/* Stadium lights */}
       {[0, Math.PI / 2, Math.PI, Math.PI * 1.5].map((angle, i) => {
         const radius = TRACK_RADIUS + TRACK_WIDTH / 2 + 8;
@@ -319,16 +319,16 @@ function Scene({ speed }: SceneProps) {
     if (speed >= 100) return '#00ff88'; // Medium - neon green
     return '#00aaff'; // Slow - blue
   }, [speed]);
-  
+
   return (
     <>
       <ambientLight intensity={0.3} />
       <directionalLight position={[10, 20, 10]} intensity={1} castShadow />
-      
+
       <RaceTrack />
       <Supercar speed={speed} color={carColor} />
       <TrackDecorations />
-      
+
       <OrbitControls
         enablePan={false}
         minDistance={10}
@@ -356,14 +356,14 @@ export const SupercarVisualization = forwardRef<VisualizationHandle, SupercarVis
   ({ data }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isReady, setIsReady] = useState(false);
-    
+
     const speed = getSpeedFromCommits(data.totalContributions);
-    
+
     useEffect(() => {
       const timer = setTimeout(() => setIsReady(true), 100);
       return () => clearTimeout(timer);
     }, []);
-    
+
     useImperativeHandle(ref, () => ({
       captureScreenshot: async () => {
         return new Promise((resolve) => {
@@ -377,7 +377,7 @@ export const SupercarVisualization = forwardRef<VisualizationHandle, SupercarVis
         });
       },
     }));
-    
+
     return (
       <div className="w-full h-full relative">
         <Canvas
@@ -390,7 +390,7 @@ export const SupercarVisualization = forwardRef<VisualizationHandle, SupercarVis
           <fog attach="fog" args={['#0a0a0f', 30, 80]} />
           <Scene speed={speed} />
         </Canvas>
-        
+
         {/* Speed overlay */}
         <motion.div
           className="absolute top-24 left-1/2 -translate-x-1/2 text-center"
@@ -408,7 +408,7 @@ export const SupercarVisualization = forwardRef<VisualizationHandle, SupercarVis
             </div>
           </div>
         </motion.div>
-        
+
         {/* Speed tier badge */}
         <motion.div
           className="absolute top-4 right-4"
@@ -416,19 +416,18 @@ export const SupercarVisualization = forwardRef<VisualizationHandle, SupercarVis
           animate={{ opacity: isReady ? 1 : 0, scale: isReady ? 1 : 0.8 }}
           transition={{ delay: 0.8, duration: 0.3 }}
         >
-          <div className={`px-4 py-2 rounded-full font-bold text-sm ${
-            speed >= 250 ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
+          <div className={`px-4 py-2 rounded-full font-bold text-sm ${speed >= 250 ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
             speed >= 150 ? 'bg-orange-500/20 text-orange-400 border border-orange-500/50' :
-            speed >= 100 ? 'bg-green-500/20 text-green-400 border border-green-500/50' :
-            'bg-blue-500/20 text-blue-400 border border-blue-500/50'
-          }`}>
+              speed >= 100 ? 'bg-green-500/20 text-green-400 border border-green-500/50' :
+                'bg-blue-500/20 text-blue-400 border border-blue-500/50'
+            }`}>
             {speed >= 250 ? '🔥 HYPERSPEED' :
-             speed >= 150 ? '⚡ TURBO' :
-             speed >= 100 ? '🚀 CRUISING' :
-             '🐌 WARMING UP'}
+              speed >= 150 ? '⚡ TURBO' :
+                speed >= 100 ? '🚀 CRUISING' :
+                  '🐌 WARMING UP'}
           </div>
         </motion.div>
-        
+
         {/* Formula display */}
         <motion.div
           className="absolute bottom-28 left-1/2 -translate-x-1/2 text-center"
