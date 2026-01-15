@@ -275,7 +275,6 @@ export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisuali
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const progress = Math.min(data.totalContributions / MAX_COMMITS_FOR_MARS, 1);
     const reached = data.totalContributions >= MAX_COMMITS_FOR_MARS;
-    const numStars = Math.min(Math.floor(data.totalContributions / 100), 50);
 
     useImperativeHandle(ref, () => ({
       captureScreenshot: async () => {
@@ -295,34 +294,7 @@ export const GalaxyVisualization = forwardRef<VisualizationHandle, GalaxyVisuali
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Top stats - responsive positioning */}
-      <motion.div
-        className="absolute top-4 left-4 z-10 max-w-[45%] sm:max-w-none"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className="bg-black/70 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-yellow-400/30">
-          <p className="text-yellow-400 text-xs sm:text-sm font-mono truncate">
-            ☀️ {data.totalContributions.toLocaleString()}
-          </p>
-        </div>
-      </motion.div>
-      
-      <motion.div
-        className="absolute top-4 right-4 z-10 max-w-[45%] sm:max-w-none"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <div className="bg-black/70 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-neon-green/30">
-          <p className="text-neon-green text-xs sm:text-sm font-mono truncate">
-            ⭐ {numStars} stars
-          </p>
-        </div>
-      </motion.div>
-      
-      {/* Progress to Mars */}
+      {/* Progress to Mars - only overlay */}
       <ProgressDisplay contributions={data.totalContributions} />
       
       {/* 3D Scene */}
